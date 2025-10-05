@@ -1,0 +1,29 @@
+[project]
+name = "QuiLI"
+version = "0.1.0"
+description = "Create and take quizzes in the terminal."
+requires-python = ">=3.8"
+dependencies = [
+    "click>=8.3.0",
+    "rich>=14.0",
+    "matplotlib>=3.10.6",
+    "PyQt5>=5.15.11",
+    "pymupdf>=1.26.4",
+    "PyQtWebEngine>=5.15.7"
+]
+license = "MIT"
+authors = [
+    { name = "Megan Renae", email = "meganrenae21@gmail.com"}
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["config", "src*"]
+
+[project.scripts]
+quili = "src.cli:quili"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
