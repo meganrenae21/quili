@@ -11,3 +11,5 @@ MANIFEST
 wheels/
 .venv/
 .vscode/
+build/
+dist/

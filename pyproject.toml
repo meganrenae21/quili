@@ -18,7 +18,7 @@ authors = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["config", "src*"]
+include = ["config", ".", "src*"]
 
 [project.scripts]
 quili = "src.cli:quili"
