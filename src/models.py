@@ -19,20 +19,47 @@ class Question:
     def add_passage(self, passage: str):
         self.passage = passage
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "text": self.text,
+            "choices": self.choices,
+            "answer": self.answer,
+            "attachment": self.attachment,
+            "passage": self.passage
+        }
+
 class Subject:
-    def __init__(self, name: str):
+    def __init__(self, name: str, counter: int = 0):
         self.name = name
         self.questions: List[Question] = []
+        self.counter = counter
+
+    def increment_counter(self):
+        self.counter += 1
 
     def add_question(self, question: Question):
-        question.id = len(self.questions) + 1
+        self.increment_counter()
+        question.id = self.counter
         self.questions.append(question)
+    
+    def get_question_by_id(self, qid: int):
+        return [q for q in self.questions if q.id == qid][0]
+    
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "counter": self.counter,
+            "questions": [q.to_dict() for q in self.questions]
+        }
+    
 
-    def restore_ids(self):
-        i = 1
-        for q in self.questions:
-            q.id = i
-            i += 1
+class QuizAnswer:
+    def __init__(self, question: Question, given_answer: str, is_correct: bool):
+        self.question_id = question.id
+        self.question_text = question.text
+        self.given_answer = given_answer
+        self.is_correct = is_correct
 
 class QuizSession:
     def __init__(self, subject: Subject, length: int = 10):
@@ -42,7 +69,7 @@ class QuizSession:
         self.questions: List[Question] = random.sample(subject.questions, length)
         self.current: int = 0
         self.start_time = datetime.datetime.now()
-        self.answers: List[Dict[int, str, str, bool]] = []
+        self.answers: List[QuizAnswer] = [] 
         self.end_time = None
     
     def prepare_question(self):
@@ -69,12 +96,8 @@ class QuizSession:
         else:
             result = False
         self.current += 1
-        self.answers.append({
-            "question_id": self.current,
-            "question_text": question.text,
-            "given_answer": answer,
-            "result": result
-        })
+        qa = QuizAnswer(question, answer, result)
+        self.answers.append(qa)
         return result
     
     def is_finished(self) -> bool:
@@ -111,3 +134,8 @@ class Progress:
             scores.append(s)
         return [dates, scores]
     
+    def to_dict(self):
+        return {
+            "subject_name": self.subject_name,
+            "quizzes": self.quizzes
+        }

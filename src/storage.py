@@ -14,7 +14,7 @@ class SubjectFile:
         self.subject: Subject = None
 
     def save(self):
-        data = json.dumps(self.subject, default=lambda x: x.__dict__, indent=4)
+        data = json.dumps(self.subject, default=lambda x: x.to_dict(), indent=4)
         with open(os.path.join(subjects_dir, f"{self.filename}.json"), 'w') as f:
             f.write(data)
 
@@ -38,7 +38,7 @@ class ProgressFile:
         self.progress = None
 
     def save(self):
-        data = json.dumps(self.progress, default=lambda x: x.__dict__, indent=4)
+        data = json.dumps(self.progress, default=lambda x: x.to_dict(), indent=4)
         with open(os.path.join(progress_dir, f"{self.filename}.json"), 'w') as f:
             f.write(data)
     

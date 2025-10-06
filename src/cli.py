@@ -5,7 +5,7 @@ from . import subjects
 from .views import ListColumns, QuestionEntry, DisplayQuestion, CorrectAnswer, IncorrectAnswer, ProgressChart, QuestionAnswer, AttachmentViewer, QuizSummary, PassageView
 from . import subjects
 from .models import Question, QuizSession
-from .storage import SubjectFile, ProgressFile, Attachment
+from .storage import ProgressFile, Attachment
 from .session import Session
 from config import attachment_dir
 
@@ -36,9 +36,8 @@ def listsubs():
 @click.argument('subject_name')
 def addq(subject_name: str):
     """Add a question to a subject. Gives prompts for question text, choices, and answer. If the subject does not exist, it will be created."""
-    sf = SubjectFile(subject_name)
-    sf.load()
-    subject = sf.subject
+    session = Session(subject_name)
+    subject = session.load_subject()
     q = Prompt.ask("Enter question text.")
     question = Question(q)
     passage = Prompt.ask("If there is a reading passage to go with this question, please enter it here. Otherwise, enter 'none'.")
@@ -60,16 +59,17 @@ def addq(subject_name: str):
     subject.add_question(question)
     entry = QuestionEntry(question, subject_name)
     entry.printEntry()
-    sf.save()
+    session.sf.save()
 
 @quili.command()
 @click.argument('subject_name')
 @click.option('--length', '-l', type=int, default=10)
 def quiz(subject_name: str, length: int):
     """Take a quiz for the specified subject with the specified number of questions. Default is 10."""
-    sf = SubjectFile(subject_name)
-    sf.load()
-    subject = sf.subject
+    if subject_name not in subjects:
+        click.UsageError("There is no subject {subject_name}.")
+    session = Session(subject_name)
+    subject = session.load_subject()
     if len(subject.questions) < length:
         raise ValueError(f"Not enough questions in subject {subject_name} for quiz length {length}.")
     else:
@@ -115,6 +115,8 @@ def quiz(subject_name: str, length: int):
 @click.argument('subject_name')
 def progress(subject_name: str):
     """Display a graph showing your scores through time in a specified subject."""
+    if subject_name not in subjects:
+        click.UsageError("There is no subject {subject_name}.")
     session = Session(subject_name)
     progress = session.load_progress()
     data = progress.prepare_data()
@@ -125,9 +127,10 @@ def progress(subject_name: str):
 @click.argument('subject_name')
 def listquestions(subject_name: str):
     """List all questions for a given subject with their corresponding IDs."""
-    sf = SubjectFile(subject_name)
-    sf.load()
-    subject = sf.subject
+    if subject_name not in subjects:
+        click.UsageError("There is no subject {subject_name}.")
+    session = Session(subject_name)
+    subject = session.load_subject()
     strs = []
     for question in subject.questions:
         s = f"{question.id} {question.text}"
@@ -140,11 +143,11 @@ def listquestions(subject_name: str):
 @click.argument('question_id', type=int)
 def listchoices(subject_name, question_id):
     """Displays a list of all the incorrect choices for a given question. Does not display the answer."""
-    sf = SubjectFile(subject_name)
-    sf.load()
-    subject = sf.subject
-    questions = subject.questions
-    q = [qu for qu in questions if qu.id == question_id][0]
+    if subject_name not in subjects:
+        click.UsageError("There is no subject {subject_name}.")
+    session = Session(subject_name)
+    subject = session.load_subject()
+    q = subject.get_question_by_id(question_id) 
     chs = []
     for val in range(len(q.choices)):
         ch = f"{val} {q.choices[val]}"
@@ -157,11 +160,11 @@ def listchoices(subject_name, question_id):
 @click.argument('question_id', type=int)
 def showanswer(subject_name, question_id):
     """Display the answer to a question."""
-    sf = SubjectFile(subject_name)
-    sf.load()
-    subject = sf.subject
-    questions = subject.questions
-    q = [qu for qu in questions if qu.id == question_id][0]
+    if subject_name not in subjects:
+        click.UsageError("There is no subject {subject_name}.")
+    session = Session(subject_name)
+    subject = session.load_subject()
+    q = subject.get_question_by_id(question_id) 
     v = QuestionAnswer(q)
     v.printAnswer()
 
@@ -170,15 +173,15 @@ def showanswer(subject_name, question_id):
 @click.argument('question_id', type=int)
 def deleteq(subject_name, question_id):
     """Delete a question according to the specified subject and id. For a list of questions with their IDs, use listquestions SUBJECTNAME"""
-    sf = SubjectFile(subject_name)
-    sf.load()
-    subject = sf.subject
-    questions = subject.questions
-    q = [qu for qu in questions if qu.id == question_id][0]
+    if subject_name not in subjects:
+        click.UsageError("There is no subject {subject_name}.")
+    session = Session(subject_name)
+    subject = session.load_subject()
+    q = subject.get_question_by_id(question_id)
     sure = Prompt.ask("Are you sure? This cannot be undone. Enter 'delete' to continue, otherwise press enter.'")
     if sure.lower() == "delete":
         subject.questions.remove(q)
-        sf.save()
+        session.sf.save()
 
 @quili.command
 @click.argument('subject_name', type=str)
@@ -186,14 +189,14 @@ def deleteq(subject_name, question_id):
 @click.argument('choice_i', type=int)
 def deletech(subject_name, question_id, choice_i):
     """Delete a choice (incorrect choice) of the question specified by its ID. Specify the choice by its index. For a list of questions with their IDs, use listquestions SUBJECTNAME. For a list of choices with their indices, use listchoices SUBJECTNAME QUESTIONID."""
-    sf = SubjectFile(subject_name)
-    sf.load()
-    subject = sf.subject
-    questions = subject.questions
-    q = [qu for qu in questions if qu.id == question_id][0]
+    if subject_name not in subjects:
+        click.UsageError("There is no subject {subject_name}.")
+    session = Session(subject_name)
+    subject = session.load_subject()
+    q = subject.get_question_by_id(question_id)
     sure = Prompt.ask("Are you sure? This cannot be undone. Enter 'delete' to continue, otherwise press enter.'")
     if sure.lower() == "delete":
         q.choices.remove(q.choices[choice_i])
-        sf.save()
+        session.sf.save()
 
 

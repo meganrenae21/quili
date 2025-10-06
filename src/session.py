@@ -5,12 +5,12 @@ from . import subjects, uf
 class Session:
     def __init__(self, subject_name: str):
         self.subject_name = subject_name
+        self.sf = SubjectFile(subject_name)
 
     def load_subject(self) -> Subject:
         if self.subject_name in subjects:
-            sf = SubjectFile(self.subject_name)
-            sf.load()
-            return sf.subject
+            self.sf.load()
+            return self.sf.subject
         else:
             return self.add_subject(self.subject_name)
 
