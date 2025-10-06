@@ -18,6 +18,16 @@ import matplotlib.pyplot as plt
 from typing import List
 from datetime import datetime
 
+class RuleDisplay:
+    def __init__(self, title: str, text: str):
+        self.title = title
+        self.text = text
+    
+    def printRule(self):
+        rule = Rule(title=self.title)
+        console.print(rule)
+        console.print(self.text)
+
 class ListColumns:
     def __init__(self, contents: List[str]):
         self.contents = contents
@@ -34,16 +44,9 @@ class QuestionEntry:
     def printEntry(self):
         srule = Rule(title=self.subject_name)
         console.print(srule)
-        qrule = Rule(title="Question")
-        console.print(qrule)
-        console.print(self.question.text)
-        crule = Rule(title="Choices")
-        console.print(crule)
-        for ch in self.question.choices:
-            console.print(f"-  {ch}\n")
-        arule = Rule(title="Answer")
-        console.print(arule)
-        console.print(self.question.answer)
+        RuleDisplay("Question", self.question.text).prinRule()
+        RuleDisplay("Choices", "\n".join([f"- {c}" for c in self.question.choices])).printRule()
+        RuleDisplay("Answer", self.question.answer).printRule()
         if self.question.attachment is not None:
             panel = Panel(f"[italic]{self.question.attachment}.pdf[/italic]")
             console.print(panel)
@@ -64,76 +67,48 @@ class DisplayQuestion:
         self.number = number
 
     def printQuestion(self):
-        srule = Rule(title=f"{self.subject_name} Question {self.number}")
-        console.print(srule)
-        console.print(self.question_text)
+        RuleDisplay(f"{self.subject_name} Question {self.number}", self.question_text).printRule()
         hr = Rule()
         console.print(hr)
         for s in self.selections:
             console.print(f"{s[0]}. {s[1]}")
         console.print(hr)
 
-class CorrectAnswer:
-    def __init__(self, subject_name: str, question_text: str, answer: str, selections: List[tuple[str]], number: int):
-        self.subject_name = subject_name
-        self.question_text = question_text
-        self.answer = answer
-        self.selections = selections
-        self.number = number
+class CheckAnswer:
+    def __init__(self, question: Question, selected: str):
+        self.question = question
+        self.selected = selected
+        self.is_correct = (selected == question.answer)
 
-    def printCorrect(self):
-        srule = Rule(title=f"{self.subject_name} Question {self.number}")
-        console.print(srule)
-        console.print(self.question_text)
+    def display(self):
+        RuleDisplay(f"Question ID {self.question.id}", self.question.text).printRule()
         hr = Rule()
         console.print(hr)
-        for s in self.selections:
-            if s[1] == self.answer:
-                console.print(f"[bold green]{s[0]}. {s[1]}[/bold green]")
+        i = 1
+        for c in self.question.choices:
+            if c == self.question.answer and c == self.selected:
+                console.print(f"[bold green]{i}. {c}[/bold green]")
+            elif c == self.question.answer and c != self.selected:
+                console.print(f"[green]{i}. {c}[/green]")
+            elif c != self.question.answer and c == self.selected:
+                console.print(f"[red]{i}. {c}[/red]")
             else:
-                console.print(f"{s[0]}. {s[1]}")
-        crule = Rule(title="CORRECT!")
-        console.print(crule)
-
-class IncorrectAnswer:
-    def __init__(self, subject_name: str, question_text: str, correct_answer: str, selected_answer: str, selections: List[tuple[str]], number: int):
-        self.subject_name = subject_name
-        self.question_text = question_text
-        self.correct_answer = correct_answer
-        self.selected_answer = selected_answer
-        self.selections = selections
-        self.number = number
-    
-    def printIncorrect(self):
-        srule = Rule(title=f"{self.subject_name} Question {self.number}")
-        console.print(srule)
-        console.print(self.question_text)
-        hr = Rule()
-        console.print(hr)
-        for s in self.selections:
-            if s[1] == self.correct_answer:
-                console.print(f"[green]{s[0]}. {s[1]}[/green]")
-            elif s[1] == self.selected_answer:
-                console.print(f"[red]{s[0]}. {s[1]}[/red]")
-            else:
-                console.print(f"{s[0]}. {s[1]}")
-        irule = Rule(title="Incorrect")
-        console.print(irule)
+                console.print(f"{i}. {c}")
+            i += 1
+        if self.is_correct:
+            crule = Rule(title="CORRECT!")
+            console.print(crule)
+        else:
+            irule = Rule(title="Incorrect")
+            console.print(irule)
 
 class QuestionAnswer:
     def __init__(self, question: Question):
         self.question = question
 
     def printAnswer(self):
-        q = self.question.text
-        a = self.question.answer
-        qrule = Rule(title="Question")
-        console.print(qrule)
-        console.print(q)
-        arule = Rule(title="Answer")
-        console.print(arule)
-        console.print(a)
-
+        RuleDisplay("Question", self.question.text).printRule()
+        RuleDisplay("Answer", self.question.answer).printRule()
 
 class ProgressChart:
     def __init__(self, subject_name: str, data: List):

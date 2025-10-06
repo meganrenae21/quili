@@ -2,7 +2,7 @@ import os
 import click
 from rich.prompt import Prompt, IntPrompt
 from . import subjects
-from .views import ListColumns, QuestionEntry, DisplayQuestion, CorrectAnswer, IncorrectAnswer, ProgressChart, QuestionAnswer, AttachmentViewer, QuizSummary, PassageView
+from .views import ListColumns, QuestionEntry, DisplayQuestion, CheckAnswer, ProgressChart, QuestionAnswer, AttachmentViewer, QuizSummary, PassageView
 from . import subjects
 from .models import Question, QuizSession
 from .storage import ProgressFile, Attachment
@@ -91,13 +91,9 @@ def quiz(subject_name: str, length: int):
             ind = sel - 1
             selected_tuple = cs[ind]
             selected_answer = selected_tuple[1]
-            correct = qs.answer_current(selected_answer)
-            if correct:
-                display = CorrectAnswer(subject_name, cq.text, cq.answer, cs, c)
-                display.printCorrect()
-            else:
-                display = IncorrectAnswer(subject_name, cq.text, cq.answer, selected_answer, cs, c)
-                display.printIncorrect()
+            qs.answer_current(selected_answer)
+            check = CheckAnswer(cq, selected_answer)
+            check.printAnswer()
             confirm = Prompt.ask("Press any key to continue.")
             if confirm:
                 continue
