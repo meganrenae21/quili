@@ -34,7 +34,7 @@ class SubjectFile:
 class ProgressFile:
     def __init__(self, subject_name: str):
         self.subject_name = subject_name
-        self.filename = subject_name.replace(" ", "-")
+        self.filename = subject_name.replace(" ", "-").lower()
         self.progress = None
 
     def save(self):

@@ -14,9 +14,22 @@ authors = [
     { name = "Megan Renae", email = "meganrenae21@gmail.com"}
 ]
 
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "setuptools>=80.9.0"
+]
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["config", ".", "src*"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q -vv"
+testpaths = [
+    "tests"
+]
 
 [project.scripts]
 quili = "src.cli:quili"
@@ -24,4 +37,6 @@ quili = "src.cli:quili"
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+
 

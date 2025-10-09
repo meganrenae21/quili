@@ -60,6 +60,14 @@ class QuizAnswer:
         self.question_text = question.text
         self.given_answer = given_answer
         self.is_correct = is_correct
+    
+    def to_dict(self):
+        return {
+            "question_id": self.question_id,
+            "question_text": self.question_text,
+            "given_answer": self.given_answer,
+            "is_correct": self.is_correct
+        }
 
 class QuizSession:
     def __init__(self, subject: Subject, length: int = 10):

@@ -13,3 +13,6 @@ wheels/
 .vscode/
 build/
 dist/
+lib/
+tests/reports/
+tests/logs/
