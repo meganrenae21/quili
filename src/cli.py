@@ -80,7 +80,7 @@ def quiz(subject_name: str, length: int):
             if cq.passage is not None:
                 pv = PassageView(cq.passage)
                 pv.printPassage()
-            cs = qs.prepare_selections(cq)
+            cs = cq.prepare_selections()
             dq = DisplayQuestion(subject.name, cq.text, cs, c)
             dq.printQuestion()
             if cq.attachment is not None:
@@ -92,8 +92,8 @@ def quiz(subject_name: str, length: int):
             selected_tuple = cs[ind]
             selected_answer = selected_tuple[1]
             qs.answer_current(selected_answer)
-            check = CheckAnswer(cq, selected_answer)
-            check.printAnswer()
+            check = CheckAnswer(cq, selected_answer, cs)
+            check.display()
             confirm = Prompt.ask("Press any key to continue.")
             if confirm:
                 continue
@@ -144,11 +144,12 @@ def listchoices(subject_name, question_id):
     session = Session(subject_name)
     subject = session.load_subject()
     q = subject.get_question_by_id(question_id) 
-    chs = []
-    for val in range(len(q.choices)):
-        ch = f"{val} {q.choices[val]}"
-        chs.append(ch)
-    cols = ListColumns(chs)
+    sels = q.prepare_selections()
+    sel_strs = []
+    for s in sels:
+        sstr = f"{s[0]}. {s[1]}"
+        sel_strs.append(sstr)
+    cols = ListColumns(sel_strs)
     cols.printList()
 
 @quili.command

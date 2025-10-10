@@ -44,7 +44,7 @@ class QuestionEntry:
     def printEntry(self):
         srule = Rule(title=self.subject_name)
         console.print(srule)
-        RuleDisplay("Question", self.question.text).prinRule()
+        RuleDisplay("Question", self.question.text).printRule()
         RuleDisplay("Choices", "\n".join([f"- {c}" for c in self.question.choices])).printRule()
         RuleDisplay("Answer", self.question.answer).printRule()
         if self.question.attachment is not None:
@@ -75,17 +75,18 @@ class DisplayQuestion:
         console.print(hr)
 
 class CheckAnswer:
-    def __init__(self, question: Question, selected: str):
+    def __init__(self, question: Question, selected: str, selections: List[tuple[str]]):
         self.question = question
         self.selected = selected
         self.is_correct = (selected == question.answer)
+        self.selections = selections
 
     def display(self):
         RuleDisplay(f"Question ID {self.question.id}", self.question.text).printRule()
         hr = Rule()
         console.print(hr)
         i = 1
-        for c in self.question.choices:
+        for _, c in self.selections:
             if c == self.question.answer and c == self.selected:
                 console.print(f"[bold green]{i}. {c}[/bold green]")
             elif c == self.question.answer and c != self.selected:

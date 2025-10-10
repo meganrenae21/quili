@@ -70,3 +70,6 @@ Deletes `subject-name` question `question-id`.
 
 Deletes the choice at index `choice-i` for `subject-name` question `question-id`. 
 
+## Included Subjects
+
+- ACT Math: 10 questions of math questions from actual ACT and SAT exams and practice exams.

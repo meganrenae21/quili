@@ -19,6 +19,18 @@ class Question:
     def add_passage(self, passage: str):
         self.passage = passage
 
+    def prepare_selections(self):
+        mc = []
+        for c in self.choices:
+            mc.append(c)
+        mc.append(self.answer)
+        random.shuffle(mc)
+        opts = []
+        for i in range(1, len(mc) + 1):
+            opts.append(i)
+        selections = list(zip(opts, mc))
+        return selections
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -83,18 +95,6 @@ class QuizSession:
     def prepare_question(self):
         q = self.questions[self.current]
         return q
-
-    def prepare_selections(self, question: Question):
-        mc = []
-        for c in question.choices:
-            mc.append(c)
-        mc.append(question.answer)
-        random.shuffle(mc)
-        opts = []
-        for i in range(1, len(mc) + 1):
-            opts.append(i)
-        selections = list(zip(opts, mc))
-        return selections
     
     def answer_current(self, answer: str):
         question = self.questions[self.current]
@@ -132,15 +132,17 @@ class Progress:
         self.quizzes.append(qz)
 
     def prepare_data(self):
-        dates = []
+        tests = []
         scores = []
         for q in self.quizzes:
             d = datetime.datetime.strptime(q['end'],"%Y-%m-%d %H:%M:%S")
             dl = d.strftime("%x")
-            dates.append(dl)
+            t = len(tests) + 1
+            dlt = f"{dl}-{t}"
+            tests.append(dlt)
             s = q['score']/q['length'] * 100
             scores.append(s)
-        return [dates, scores]
+        return [tests, scores]
     
     def to_dict(self):
         return {

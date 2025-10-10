@@ -1,0 +1,131 @@
+{
+    "name": "ACT Math",
+    "counter": 10,
+    "questions": [
+        {
+            "id": 1,
+            "text": "Cameron took 4 tests, and his scores were as follows: 100, 60, 80, and 30. Cameron took another test that was scored x. The mean score of the 5 tests he took is 72. What is the value of x?",
+            "choices": [
+                "54",
+                "67",
+                "68"
+            ],
+            "answer": "90",
+            "attachment": null,
+            "passage": null
+        },
+        {
+            "id": 2,
+            "text": "The initial speed, in miles per hour, of a certain car that skids to a stop can be estimated by multiplying the length of the skid, in feet, by 35 and then taking the square root of the product. According to this method, what is the estimated initial speed, in miles per hour, of the car when it makes a 108-foot skid.? Choose the correct answer from the list of choices in the attached file. Note, the choices may not be in order they are shown below.",
+            "choices": [
+                "Choice A",
+                "Choice B",
+                "Choice D"
+            ],
+            "answer": "Choice C",
+            "attachment": "act-math-q2-answers",
+            "passage": null
+        },
+        {
+            "id": 3,
+            "text": "See the attached question, figure, and choose the most appropriate answer from the choices given. Please note, the choices may not be in the same order as they are below.",
+            "choices": [
+                "Choice A",
+                "Choice B",
+                "Choice D",
+                "Choice E"
+            ],
+            "answer": "Choice C",
+            "attachment": "act-math-q3-question-answers",
+            "passage": null
+        },
+        {
+            "id": 4,
+            "text": "An airplane leaves Atlanta at 2 PM and flies north at 250 miles per hour. A second airplane leaves Atlanta 30 minutes later and flies north at 280 miles per hour. At what time will the second airplane overtake the first?",
+            "choices": [
+                "6:00 PM",
+                "6:20 PM",
+                "7:00 PM"
+            ],
+            "answer": "6:40 PM",
+            "attachment": null,
+            "passage": null
+        },
+        {
+            "id": 5,
+            "text": "What is the median number of US viewers, in millions, of these 8 Summer Olympic opening ceremonies?",
+            "choices": [
+                "26.6",
+                "27.8",
+                "30.2"
+            ],
+            "answer": "28.6",
+            "attachment": "act-math-q5-figure",
+            "passage": "The Summer Olympic Games are among the most-watched internationally televised sporting events and have been held in over 20 different countries. The table attached gives the number of U.S. viewers, in millions, for 8 Summer Olympics opening ceremonies in different international cities."
+        },
+        {
+            "id": 6,
+            "text": "Oakley is watching the weather to plan their week. The forecast says that Monday has a 65% chance of rain, Tuesday has a 30% chance of rain, Wednesday has a 90% chance of rain, and Thursday has a 60% of rain. Oakley wants to paint their house and wants to avoid rain for all four days. What is the probability (as a percentage rounded to the nearest hundredth) that it will NOT rain on any of the four days?",
+            "choices": [
+                "0.25%",
+                "0.49%",
+                "1.47%",
+                "1.96%"
+            ],
+            "answer": "0.98%",
+            "attachment": null,
+            "passage": null
+        },
+        {
+            "id": 7,
+            "text": "If 4x + 3x + 2(x + 5) = 28, then x = ?",
+            "choices": [
+                "-2",
+                "-1",
+                "1"
+            ],
+            "answer": "2",
+            "attachment": null,
+            "passage": null
+        },
+        {
+            "id": 8,
+            "text": "Read the question and context in the attachment, then choose your answer from the options below.",
+            "choices": [
+                "None",
+                "I and II only",
+                "II and III only",
+                "I, II, and III"
+            ],
+            "answer": "II only",
+            "attachment": "act-math-q8-question",
+            "passage": null
+        },
+        {
+            "id": 9,
+            "text": "Carmen is playing with blocks. She arranges stacks of blocks so that each successive level of blocks has 1 fewer block than the level below it and the top level has 1 block. Such a stack with 3 levels is shown in the attachment. Carment wants to make such a stack with 12 levels. How many blocks would she use to build this stack?",
+            "choices": [
+                "66",
+                "132",
+                "144",
+                "156"
+            ],
+            "answer": "78",
+            "attachment": "act-math-q9-figure",
+            "passage": null
+        },
+        {
+            "id": 10,
+            "text": "One side of square PQRS has a length of 21 inches. A certain rectangle whose area is equal to the area of PQRS has a width of 9 inches. What is the length, in inches, of the certain rectange?",
+            "choices": [
+                "21",
+                "30",
+                "63",
+                "94.5"
+            ],
+            "answer": "49",
+            "attachment": null,
+            "passage": null
+        }
+    ]
+}
