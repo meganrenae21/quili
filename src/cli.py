@@ -29,6 +29,8 @@ def add(subject_name: str):
 @quili.command()
 def listsubs():
     """List all existing subjects."""
+    if len(subjects) == 0:
+        return Exception("No subjects exist yet. Add one with 'quili add SUBJECTNAME'.")
     cols = ListColumns(subjects)
     cols.printList()
 
@@ -113,6 +115,7 @@ def progress(subject_name: str):
     """Display a graph showing your scores through time in a specified subject."""
     if subject_name not in subjects:
         click.UsageError("There is no subject {subject_name}.")
+
     session = Session(subject_name)
     progress = session.load_progress()
     data = progress.prepare_data()
@@ -124,7 +127,7 @@ def progress(subject_name: str):
 def listquestions(subject_name: str):
     """List all questions for a given subject with their corresponding IDs."""
     if subject_name not in subjects:
-        click.UsageError("There is no subject {subject_name}.")
+        click.UsageError(f"There is no subject {subject_name}.")
     session = Session(subject_name)
     subject = session.load_subject()
     strs = []
@@ -138,12 +141,15 @@ def listquestions(subject_name: str):
 @click.argument('subject_name', type=str)
 @click.argument('question_id', type=int)
 def listchoices(subject_name, question_id):
-    """Displays a list of all the incorrect choices for a given question. Does not display the answer."""
+    """Displays a list of all the choices for a given question. Does not reveal the answer."""
     if subject_name not in subjects:
-        click.UsageError("There is no subject {subject_name}.")
+        click.UsageError(f"There is no subject {subject_name}.")
     session = Session(subject_name)
     subject = session.load_subject()
-    q = subject.get_question_by_id(question_id) 
+    try:
+        q = subject.get_question_by_id(question_id) 
+    except IndexError:
+        click.UsageError(f"There is no question with ID {question_id} in {subject_name}.")
     sels = q.prepare_selections()
     sel_strs = []
     for s in sels:
@@ -161,7 +167,10 @@ def showanswer(subject_name, question_id):
         click.UsageError("There is no subject {subject_name}.")
     session = Session(subject_name)
     subject = session.load_subject()
-    q = subject.get_question_by_id(question_id) 
+    try:
+        q = subject.get_question_by_id(question_id) 
+    except IndexError:
+        click.UsageError(f"There is no question with ID {question_id} in {subject_name}.")
     v = QuestionAnswer(q)
     v.printAnswer()
 
@@ -174,7 +183,10 @@ def deleteq(subject_name, question_id):
         click.UsageError("There is no subject {subject_name}.")
     session = Session(subject_name)
     subject = session.load_subject()
-    q = subject.get_question_by_id(question_id)
+    try:
+        q = subject.get_question_by_id(question_id)
+    except IndexError:
+        click.UsageError(f"There is no question with ID {question_id} in {subject_name}.")
     sure = Prompt.ask("Are you sure? This cannot be undone. Enter 'delete' to continue, otherwise press enter.'")
     if sure.lower() == "delete":
         subject.questions.remove(q)
@@ -190,7 +202,12 @@ def deletech(subject_name, question_id, choice_i):
         click.UsageError("There is no subject {subject_name}.")
     session = Session(subject_name)
     subject = session.load_subject()
-    q = subject.get_question_by_id(question_id)
+    try:
+        q = subject.get_question_by_id(question_id)
+    except IndexError:
+        click.UsageError(f"There is no question with ID {question_id} in {subject_name}.")
+    if len(q.choices) >= choice_i:
+        click.UsageError(f"You have entered an invalid index. Please use quili listchoices [SUBJECTNAME] [QUESTIONID] to list choices with their indices.")
     sure = Prompt.ask("Are you sure? This cannot be undone. Enter 'delete' to continue, otherwise press enter.'")
     if sure.lower() == "delete":
         q.choices.remove(q.choices[choice_i])
